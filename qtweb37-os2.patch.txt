@@ -1,0 +1,74 @@
+diff -urBbi D:\Fuentes\QtWeb/main.cpp C:\PROGRAMS\Internet\QtWeb\sources/main.cpp
+--- D:\Fuentes\QtWeb/main.cpp	2010-10-15 15:41:26.000000000 +0200
++++ C:\PROGRAMS\Internet\QtWeb\sources/main.cpp	2011-03-01 17:45:26.000000000 +0100
+@@ -38,6 +38,7 @@
+ ****************************************************************************/
+ 
+ #include "browserapplication.h"
++#ifndef __OS2__
+ #include <QtPlugin>
+ 
+ Q_IMPORT_PLUGIN(qjpeg)
+@@ -51,7 +52,7 @@
+ Q_IMPORT_PLUGIN(qjpcodecs)
+ Q_IMPORT_PLUGIN(qkrcodecs)
+ Q_IMPORT_PLUGIN(qtwcodecs)
+-
++#endif
+ 
+ int main(int argc, char **argv)
+ {
+@@ -63,6 +64,7 @@
+         return 0;
+ 
+     application.newMainWindow();
++    application.setWindowIcon(QIcon(":/logo.png"));
+ 
+     return application.exec();
+ }
+Only in C:\PROGRAMS\Internet\QtWeb\sources: qtweb_os2.ico
+Only in C:\PROGRAMS\Internet\QtWeb\sources: QtWeb_os2.rc
+diff -urBbi D:\Fuentes\QtWeb/QtWeb.pri C:\PROGRAMS\Internet\QtWeb\sources/QtWeb.pri
+--- D:\Fuentes\QtWeb/QtWeb.pri	2010-10-29 19:08:44.000000000 +0200
++++ C:\PROGRAMS\Internet\QtWeb\sources/QtWeb.pri	2011-03-01 17:03:30.000000000 +0100
+@@ -129,16 +129,6 @@
+ 
+ #Resource file(s)
+ 
+-macx {
+-RESOURCES += data/data.qrc \
+-    htmls/htmls.qrc \
+-    ./torrent/icons.qrc
+-}
+-else
+-{
+ RESOURCES += data/data.qrc \
+     htmls/htmls.qrc \
+     ./torrent/icons.qrc \
+-    $(QTDIR)/src/3rdparty/webkit/WebCore/WebCore.qrc \
+-    $(QTDIR)/src/3rdparty/webkit/WebCore/inspector/front-end/WebKit.qrc
+-}
+diff -urBbi D:\Fuentes\QtWeb/QtWeb.pro C:\PROGRAMS\Internet\QtWeb\sources/QtWeb.pro
+--- D:\Fuentes\QtWeb/QtWeb.pro	2010-10-19 08:51:18.000000000 +0200
++++ C:\PROGRAMS\Internet\QtWeb\sources/QtWeb.pro	2011-03-01 18:16:58.000000000 +0100
+@@ -5,8 +5,10 @@
+ TARGET = QtWeb
+ DESTDIR = ./release
+ QT += network xml webkit
++!os2 {
+ CONFIG += static
+ QTPLUGIN += qcncodecs qjpcodecs qkrcodecs qtwcodecs  qgif qjpeg qico 
++}
+ DEFINES += QT_NO_UITOOLS
+ 
+ INCLUDEPATH += ./tmp/moc/release_static \
+@@ -26,6 +28,9 @@
+ #Windows resource file
+ win32:RC_FILE = QtWeb.rc
+ 
++#eComStation (OS/2) resource file
++os2:RC_FILE = QtWeb_os2.rc
++
+ macx:ICON = qtweb.icns
+ 
+ message("qmake finished.")
